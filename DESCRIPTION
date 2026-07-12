@@ -1,0 +1,15 @@
+Package: chartforge
+Title: Point-and-Click JavaScript Chart Builder for R and WebR
+Version: 0.6.6
+Authors@R: person("Alek", "Rutkowski", email = "alek.rutkowski@gmail.com", role = c("aut", "cre"))
+Description: A small R package and browser application for building reusable R code that turns R data frames into slim embeddable HTML/CSS/JavaScript chart fragments or complete chart pages. The app can preview the emitted R code through a local R endpoint or through WebR in the browser, and it can use pasted CSV data or data frames and matrices from the R environment that launched the app. The exported R API contains one function for every direct JavaScript renderer and chart-type combination supported by the app.
+License: MIT
+URL: https://github.com/alekrutkowski/chartforge
+BugReports: https://github.com/alekrutkowski/chartforge/issues
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports: jsonlite, stats, utils
+Suggests: plumber, testthat (>= 3.0.0), htmlwidgets, highcharter, plotly, r2d3, vegawidget, echarts4r, echarty, apexcharter, rAmCharts, vchartr, billboarder
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

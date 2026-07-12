@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "renderers": [
+    "highcharts",
+    "plotly",
+    "d3",
+    "vega",
+    "observable",
+    "chartjs",
+    "echarts",
+    "apexcharts",
+    "googlecharts",
+    "amcharts",
+    "vchart",
+    "anychart",
+    "billboard"
+  ],
+  "chart_types": [
+    "scatter",
+    "line",
+    "spline",
+    "step",
+    "bar",
+    "stacked_bar",
+    "area",
+    "stacked_area",
+    "histogram",
+    "density",
+    "pie",
+    "donut",
+    "bubble",
+    "boxplot",
+    "heatmap",
+    "treemap",
+    "lollipop"
+  ],
+  "entries": {
+    "readable": {
+      "file": "runtime-readable.json.gz",
+      "uncompressed_bytes": 3692323,
+      "compressed_bytes": 184800,
+      "sha256": "6036c9133c6346bd8e9f8d09641e3ab7792edafc5b78360b6e3f35dad97f2541"
+    },
+    "minified": {
+      "file": "runtime-minified.json.gz",
+      "uncompressed_bytes": 2086883,
+      "compressed_bytes": 182662,
+      "sha256": "59d223e1ad19664fe59e8a251a99452600ab67e5db2922b7321a1c7024791406"
+    }
+  }
+}

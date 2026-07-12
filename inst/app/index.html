@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>ChartForge</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css?v=0.6.6">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/><path d="M2.5 21.5h19"/></svg>
+        </div>
+        <div>
+          <div class="brand-row">
+            <h1>ChartForge</h1>
+            <span class="version-pill">0.6.6</span>
+          </div>
+          <p>Point-and-click JavaScript charts, emitted as reusable R.</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span id="connection-badge" class="status-badge neutral" title="Preview engine status">
+          <span class="status-dot"></span><span id="connection-label">Checking local R</span>
+        </span>
+        <button class="button ghost icon-button" id="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch colour theme">
+          <svg class="icon sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+          <svg class="icon moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="button ghost" id="reset-all" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+        <button class="button secondary" id="load-demo" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg>
+          Demo
+        </button>
+        <button class="button primary" id="copy-code" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy R
+        </button>
+        <button class="button secondary" id="copy-html-top" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 9-4 3 4 3m8-6 4 3-4 3m-2-9-4 12"/></svg>
+          Copy HTML
+        </button>
+      </div>
+    </header>
+
+    <main class="workbench">
+      <aside class="builder-card" aria-label="Chart builder controls">
+        <nav class="module-tabs" role="tablist" aria-label="Builder sections">
+          <button class="module-tab active" type="button" role="tab" aria-selected="true" data-module="data"><span>1</span>Data</button>
+          <button class="module-tab" type="button" role="tab" aria-selected="false" data-module="chart"><span>2</span>Chart</button>
+          <button class="module-tab" type="button" role="tab" aria-selected="false" data-module="mappings"><span>3</span>Mappings</button>
+          <button class="module-tab" type="button" role="tab" aria-selected="false" data-module="style"><span>4</span>Style</button>
+          <button class="module-tab" type="button" role="tab" aria-selected="false" data-module="general"><span>5</span>General</button>
+        </nav>
+
+        <div class="module-scroll">
+          <section class="module-panel active" data-module-panel="data" role="tabpanel">
+            <div class="section-heading">
+              <div><p class="kicker">Input</p><h2>Choose your data</h2></div>
+              <span id="row-count" class="count-badge">0 rows</span>
+            </div>
+
+            <div class="segmented" role="tablist" aria-label="Data source">
+              <button class="segment active" id="source-text" type="button" data-source="text">CSV / TSV</button>
+              <button class="segment" id="source-env" type="button" data-source="env">Local R</button>
+            </div>
+
+            <div id="text-source-panel" class="source-panel active">
+              <label class="file-drop" for="data-file">
+                <input id="data-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain">
+                <span class="file-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+                <strong>Drop or choose a CSV/TSV file</strong>
+                <small>Files stay in your browser.</small>
+              </label>
+
+              <div class="field-grid two">
+                <label class="field">Delimiter
+                  <select id="delimiter">
+                    <option value="auto">Auto-detect</option>
+                    <option value=",">Comma</option>
+                    <option value="tab">Tab</option>
+                    <option value=";">Semicolon</option>
+                  </select>
+                </label>
+                <label class="field">Input decimal mark
+                  <select id="input-decimal-mark">
+                    <option value=".">Decimal dot</option>
+                    <option value=",">Decimal comma</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="switch-row">
+                <span><strong>Recognise dates automatically</strong><small>Convert unambiguous ISO date and date-time columns.</small></span>
+                <input id="auto-dates" type="checkbox" checked><span class="switch" aria-hidden="true"></span>
+              </label>
+
+              <label class="field">Paste CSV or TSV
+                <textarea id="data-input" rows="10" spellcheck="false" placeholder="model,mpg,wt&#10;Mazda RX4,21,2.62"></textarea>
+              </label>
+              <div class="button-row">
+                <button class="button primary" id="parse-data" type="button">Use pasted data</button>
+                <button class="button ghost" id="clear-data" type="button">Clear</button>
+              </div>
+            </div>
+
+            <div id="env-source-panel" class="source-panel">
+              <div id="r-session-card" class="notice neutral">
+                <div class="notice-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9m3-3-3 3 3 3"/><path d="M4 17h9m-3-3 3 3-3 3"/></svg></div>
+                <div><strong id="r-session-title">Checking the local R session</strong><p id="env-note">ChartForge is looking for the R process that launched this app.</p></div>
+              </div>
+              <label class="field">Data frame or matrix
+                <select id="env-object"></select>
+              </label>
+              <div class="button-row">
+                <button class="button primary" id="load-env-object" type="button">Use selected object</button>
+                <button class="button ghost" id="refresh-env" type="button">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.17-6.57L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.17 6.57L21 16"/><path d="M16 16h5v5"/></svg>
+                  Refresh
+                </button>
+              </div>
+            </div>
+
+            <div class="subsection compact">
+              <div class="subsection-title"><h3>Detected columns</h3><span id="column-count" class="muted-text"></span></div>
+              <div id="columns" class="column-chips"></div>
+            </div>
+          </section>
+
+          <section class="module-panel" data-module-panel="chart" role="tabpanel">
+            <div class="section-heading"><div><p class="kicker">Renderer</p><h2>Choose the chart</h2></div></div>
+            <label class="field">JavaScript library
+              <select id="library"></select>
+            </label>
+            <div id="library-note" class="notice info compact-notice"></div>
+            <label class="field">Chart type
+              <select id="chart-type"></select>
+            </label>
+            <div class="field-grid two">
+              <label class="field">Marker size
+                <input id="marker-size" type="number" min="1" max="64" step="1">
+              </label>
+              <label class="field"><span id="bins-label">Histogram bins</span>
+                <input id="bins" type="number" min="2" max="100" step="1">
+              </label>
+            </div>
+            <label class="field">Aggregation
+              <select id="aggregate">
+                <option value="sum">Sum</option>
+                <option value="mean">Mean</option>
+                <option value="count">Count rows</option>
+              </select>
+            </label>
+            <div class="separator"></div>
+            <label class="field">Title
+              <input id="title" type="text" placeholder="Chart title">
+            </label>
+            <label class="field">Subtitle
+              <input id="subtitle" type="text" placeholder="Optional subtitle">
+            </label>
+            <label class="field">Caption
+              <input id="caption" type="text" placeholder="Optional source or note">
+            </label>
+          </section>
+
+          <section class="module-panel" data-module-panel="mappings" role="tabpanel">
+            <div class="section-heading"><div><p class="kicker">Columns</p><h2>Map your variables</h2></div></div>
+            <label class="field">X or category
+              <select id="map-x"></select>
+            </label>
+            <label class="field">Y or value
+              <select id="map-y"></select>
+            </label>
+            <label class="field">Group, colour, or heatmap row
+              <select id="map-group"></select>
+            </label>
+            <div class="field">
+              <span class="field-label">Extra hover-label columns</span>
+              <p class="field-help">Select several columns. X, Y and group are already shown and are removed from labels automatically.</p>
+              <div id="label-columns" class="check-list" role="group" aria-label="Hover label columns"></div>
+            </div>
+            <div class="separator"></div>
+            <label class="field">Sort rows by
+              <select id="sort-by"></select>
+            </label>
+            <label class="switch-row compact-switch">
+              <span><strong>Descending order</strong><small>Applied before the chart is rendered.</small></span>
+              <input id="sort-desc" type="checkbox"><span class="switch" aria-hidden="true"></span>
+            </label>
+          </section>
+
+          <section class="module-panel" data-module-panel="style" role="tabpanel">
+            <div class="section-heading">
+              <div><p class="kicker">Library-specific</p><h2 id="style-title">Renderer style</h2></div>
+              <a id="renderer-doc-link" class="button ghost small" target="_blank" rel="noopener noreferrer">Open manual</a>
+            </div>
+            <p id="style-description" class="section-copy"></p>
+            <aside id="renderer-license-note" class="license-callout" aria-live="polite"></aside>
+            <div id="renderer-style-controls" class="dynamic-controls"></div>
+          </section>
+
+          <section class="module-panel" data-module-panel="general" role="tabpanel">
+            <div class="section-heading"><div><p class="kicker">Shared options</p><h2>General settings</h2></div></div>
+
+            <div class="subsection">
+              <div class="subsection-title"><h3>Canvas</h3></div>
+              <div class="field-grid two">
+                <label class="field">Width, px
+                  <input id="width" type="number" min="120" max="4000" step="10">
+                </label>
+                <label class="field">Height, px
+                  <input id="height" type="number" min="120" max="2400" step="10">
+                </label>
+              </div>
+              <div class="field-grid two">
+                <label class="field">Chart theme
+                  <select id="chart-theme"></select>
+                </label>
+                <label class="field">Colour palette
+                  <select id="palette"></select>
+                </label>
+              </div>
+              <div id="palette-preview" class="palette-preview" aria-hidden="true"></div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-title"><h3>Typography</h3></div>
+              <label class="field">Google web font
+                <select id="font-family"></select>
+              </label>
+              <div class="field-grid two">
+                <label class="field">Body text, px<input id="text-size" type="number" min="7" max="48" step="1"></label>
+                <label class="field">Axis text, px<input id="axis-text-size" type="number" min="7" max="40" step="1"></label>
+                <label class="field">Title, px<input id="title-size" type="number" min="10" max="72" step="1"></label>
+                <label class="field">Subtitle, px<input id="subtitle-size" type="number" min="8" max="48" step="1"></label>
+              </div>
+              <div class="field-grid two">
+                <div class="field" id="dpi-field">
+                  <div class="field-label-row">
+                    <label for="dpi">Rendering scale</label>
+                    <span class="help-tip" tabindex="0" aria-label="Rendering scale applies only to Chart.js." aria-describedby="dpi-tooltip">?
+                      <span class="help-tip-content" id="dpi-tooltip" role="tooltip">Applies only to Chart.js. It controls the canvas device-pixel ratio for sharper bitmap rendering and export.</span>
+                    </span>
+                    <output id="dpi-value" for="dpi">1×</output>
+                  </div>
+                  <input id="dpi" type="range" min="1" max="3" step="0.05">
+                </div>
+                <label class="field">Output decimal mark
+                  <select id="decimal-mark"><option value=".">Decimal dot</option><option value=",">Decimal comma</option></select>
+                </label>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-title"><h3>Legend and interaction</h3></div>
+              <label class="switch-row compact-switch"><span><strong>Show legend</strong></span><input id="legend-enabled" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+              <label class="field">Legend position
+                <select id="legend-position"><option value="bottom">Bottom</option><option value="right">Right</option><option value="top">Top</option><option value="left">Left</option><option value="none">None</option></select>
+              </label>
+              <div class="switch-stack">
+                <label class="switch-row compact-switch"><span><strong>Grid lines</strong></span><input id="grid" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+                <label class="switch-row compact-switch"><span><strong>Tooltips</strong></span><input id="tooltip" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+                <label class="switch-row compact-switch"><span><strong>Animation</strong></span><input id="animation" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-title"><h3>HTML output</h3></div>
+              <label class="switch-row"><span><strong>Embeddable fragment</strong><small>Return only the code needed inside an existing page.</small></span><input id="embed-output" type="checkbox" checked><span class="switch" aria-hidden="true"></span></label>
+              <label class="switch-row"><span><strong>Inline vendor assets where permitted</strong><small id="full-bundle-help">Inline vendor JavaScript/CSS when the renderer licence permits it; otherwise retain a legally annotated CDN link.</small></span><input id="full-bundle" type="checkbox"><span class="switch" aria-hidden="true"></span></label>
+              <label class="switch-row"><span><strong>Minify output</strong><small>Compact HTML, CSS and JavaScript for efficient deployment.</small></span><input id="minified" type="checkbox"><span class="switch" aria-hidden="true"></span></label>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <article class="preview-card">
+          <header class="card-header">
+            <div><p class="kicker">Live preview</p><h2 id="preview-title">Generated chart</h2></div>
+            <div id="status" class="preview-status neutral"><span class="status-dot"></span><span>Preparing preview</span></div>
+          </header>
+          <div id="preview-wrap" class="preview-wrap">
+            <iframe id="preview" title="Chart preview" sandbox="allow-scripts allow-same-origin allow-popups allow-downloads" credentialless></iframe>
+          </div>
+        </article>
+
+        <article class="output-card">
+          <header class="output-header">
+            <div class="output-tabs" role="tablist" aria-label="Generated output">
+              <button class="output-tab active" type="button" role="tab" aria-selected="true" data-output="r-code">R code</button>
+              <button class="output-tab" type="button" role="tab" aria-selected="false" data-output="html-code">HTML output</button>
+              <button class="output-tab" type="button" role="tab" aria-selected="false" data-output="data-preview">Data preview</button>
+            </div>
+            <div class="output-actions">
+              <button class="button ghost small" id="run-local" type="button">Run local R</button>
+              <button class="button ghost small" id="run-webr" type="button">Run WebR</button>
+              <button class="button ghost small" id="download-r" type="button">Save .R</button>
+              <button class="button ghost small" id="download-html" type="button">Save HTML</button>
+              <button class="button secondary small" id="copy-current" type="button">Copy R</button>
+            </div>
+          </header>
+
+          <section class="output-panel active" id="r-code-panel" data-output-panel="r-code">
+            <pre class="code-view"><code id="r-code" class="syntax language-r"></code></pre>
+          </section>
+          <section class="output-panel" id="html-code-panel" data-output-panel="html-code">
+            <pre class="code-view"><code id="html-code" class="syntax language-html"></code></pre>
+          </section>
+          <section class="output-panel" id="data-preview-panel" data-output-panel="data-preview">
+            <div id="data-preview" class="table-wrap"></div>
+          </section>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/app.js?v=0.6.6" defer></script>
+</body>
+</html>

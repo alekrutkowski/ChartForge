@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+*.gz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+
+# Preserve upstream licence and notice bytes exactly so recorded hashes remain valid.
+inst/app/licenses/** -text

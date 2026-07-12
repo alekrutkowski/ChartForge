@@ -1,0 +1,32 @@
+{
+  "name": "chartforge-runtime-build",
+  "private": true,
+  "version": "0.6.6",
+  "description": "Development tooling and release checks for the ChartForge R package.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alekrutkowski/chartforge.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:runtimes": "node scripts/build-runtimes.mjs",
+    "test": "npm run test:preview-state && npm run test:webr-loader && npm run test:local-import && npm run test:license-policy && npm run test:r-api && npm run test:webr-preview && npm run test:ui-regressions",
+    "test:preview-state": "node scripts/test-preview-state.mjs",
+    "test:webr-loader": "node scripts/test-webr-loader.mjs",
+    "test:local-import": "node scripts/test-local-import.mjs",
+    "test:license-policy": "node scripts/test-license-policy.mjs",
+    "test:r-api": "node scripts/test-r-api.mjs",
+    "test:webr-preview": "node scripts/test-webr-preview.mjs",
+    "audit:release": "node scripts/audit-release.mjs",
+    "test:ui-regressions": "node scripts/test-ui-regressions.mjs"
+  },
+  "devDependencies": {
+    "acorn": "^8.15.0",
+    "terser": "^5.43.1",
+    "webr": "^0.6.0"
+  }
+}
