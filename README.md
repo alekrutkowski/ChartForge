@@ -39,17 +39,6 @@ chart_html <- cf_plotly_scatter(
 cf_save_html(chart_html, "chart.html")
 ```
 
-## Version 0.6.6
-
-This release fixes the pinned webR module URL, adds resilient mirror failover, and hardens the repository for public GitHub publication while retaining the preview-lifecycle and renderer-licensing safeguards.
-
-- Local-R rendering is request-deduplicated and no longer launches another preview merely because a successful preview updated connection or data-object status.
-- WebR uses the explicit PostMessage channel and the correct pinned official `v0.6.0` module path. If loading or starting that release fails, it tries the matching `webr@0.6.0` ECMAScript module, worker, and runtime files from jsDelivr and UNPKG.
-- WebR uses `evalRString()` for character output and displays the complete R error condition and call instead of a generic error toast.
-- Legally permitted `full_bundle = TRUE` WebR previews receive browser-fetched vendor assets and bundled licence texts through in-memory R overrides.
-- Highcharts, ApexCharts, Google Charts, and AnyChart remain CDN-only even when full bundling is requested.
-- The compressed renderer-by-chart runtime packs and third-party notices remain unchanged in scope.
-
 The MIT licence covers ChartForge code only. It does not grant rights to use third-party renderers.
 
 ## App workflow
@@ -64,11 +53,13 @@ The compact two-pane interface keeps settings on the left and output on the righ
 
 The right pane provides live chart preview, syntax-highlighted R code, syntax-highlighted HTML output, and a data preview. Both code panels follow the app's light/dark setting. Local-R and WebR errors are displayed as readable error cards in the chart area.
 
+<img width="2952" height="2138" alt="image" src="https://github.com/user-attachments/assets/69e705fe-9978-46f7-a354-2dc02bcb6d67" />
+
 ## Install and run
 
 ```r
 install.packages(c("plumber", "jsonlite", "remotes"))
-remotes::install_local("chartforge")
+remotes::install_github("alekrutkowski/ChartForge")
 chartforge::run_app()
 ```
 
