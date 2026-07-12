@@ -2,6 +2,8 @@
 
 ChartForge is an R package and point-and-click web application for designing JavaScript charts from R data frames and matrices. The app emits reusable R code, evaluates that code through local R or WebR, and previews the HTML/CSS/JavaScript string returned by the selected ChartForge R function.
 
+You can use the webR version at https://alekrutkowski.github.io/ChartForge/.
+
 The emitted R code is not a pasted HTML literal. It can be rerun outside the app with new or modified data:
 
 ```r
